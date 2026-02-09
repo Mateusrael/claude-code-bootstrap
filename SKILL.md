@@ -33,7 +33,7 @@ Read `.claude/skills/claude-code-bootstrap/references/claude-md-best-practices.m
 
 **Extract**: Project name, tech stack, build system, available scripts.
 
-**Analyze structure** (stay shallow):
+**Analyze structure** (stay shallow — existing docs are audited separately in Step 1b):
 - README.md for project purpose and features
 - Top-level directories for architecture pattern
 - Entry points (main.ts, index.ts, app.module.ts, etc.)
@@ -94,15 +94,45 @@ Before proceeding, confirm you have all of the following. If any are missing, re
 - **Monorepo status**: single project, confirmed monorepo, or ambiguous (awaiting user input)
 - If monorepo: **subproject list** with each subproject's path, purpose, and tech stack
 - If monorepo: **workspace tool** (if any)
-- **Existing files inventory** (requires separate filesystem checks): which of `.claude/CLAUDE.md`, `.claude/settings.json`, `.claude/docs/*`, root `CLAUDE.md`, subproject `CLAUDE.md` files already exist
+- **Existing files inventory** (existence check only — content is read in Step 1b): which of `.claude/CLAUDE.md`, `.claude/settings.json`, `.claude/docs/*`, root `CLAUDE.md`, subproject `CLAUDE.md` files already exist
 
 Print this as a **Detection Summary** to the user before proceeding. This gives the user a chance to correct any misdetection before files are generated. If the user provides corrections, update the detection results accordingly before proceeding.
+
+### Step 1b: Documentation Audit (only when existing docs found)
+
+**Skip this step entirely if no existing documentation files were found in the inventory.** Proceed directly to Step 2.
+
+If existing docs were found, analyze them to identify what needs updating:
+
+1. **Read all existing doc files** from the inventory (CLAUDE.md, settings.json, all `.claude/docs/*.md`, and for monorepos each subproject's CLAUDE.md and `docs/*.md`).
+
+2. **Compare documented state vs detected state:**
+
+| Dimension | Check |
+|-----------|-------|
+| **Commands** | Do build/test/lint commands in CLAUDE.md and settings.json `allow` list match current manifest scripts? |
+| **Tech stack** | Does the documented stack match current dependencies in manifest files? |
+| **Structure** | Do folder names, entry points, and architecture references in docs match the actual filesystem? |
+| **Doc coverage** | Are there detected project aspects (test framework, UI deps, complex architecture) with no corresponding doc? Are there docs for aspects no longer present? |
+| **Monorepo** | Do subproject tables match current workspace members? Any added/removed subprojects? |
+
+3. **Present an Audit Report** to the user, organized as:
+   - **Outdated** — items in docs that no longer match the project (with specific before/after)
+   - **Missing** — project aspects that should have docs but don't
+   - **Accurate** — items that are still correct (brief summary, no action needed)
+
+4. **Ask the user** how to proceed:
+   - **Update all** — apply all recommended changes
+   - **Selective** — present findings as a numbered list; user picks which numbers to apply. Unapproved findings are left as-is (existing content preserved).
+   - **Fresh start** — ignore existing docs and regenerate from scratch (proceeds to Step 2 as if no docs existed)
+
+Remember the user's choice and approved findings. Steps 2–6 will reference them to make targeted updates rather than full overwrites.
 
 ## Step 2: Handle Existing Files
 
 **Before creating any file**, check if it (or a related version) already exists. Use the existing files inventory from the Step 1 Checkpoint.
 
-**Rule 1 — Read before overwriting:** If a file you are about to create already exists (including root `CLAUDE.md` which maps to `.claude/CLAUDE.md`), read it first. Preserve all project-specific content (custom commands, architectural notes, team conventions) unless it conflicts with the new structure. Inform the user what was preserved and what changed.
+**Rule 1 — Read before overwriting:** If a file you are about to create already exists (including root `CLAUDE.md` which maps to `.claude/CLAUDE.md`), read it first. If Step 1b produced audit findings, apply only the targeted updates the user approved — preserve everything else. If no audit was run (fresh project) or user chose "Fresh start," follow the creation steps normally. Inform the user what was preserved and what changed.
 
 **Rule 2 — Relocate when scope changes:** If existing docs need to move (e.g., root `.claude/docs/testing.md` should become subproject-scoped in a monorepo), move the relevant content to the new location and remove the old file. Keep only `coding-guidelines.md` at root level.
 
@@ -116,6 +146,8 @@ mkdir -p .claude/docs
 ```
 
 ## Step 4: Create CLAUDE.md
+
+**Audit-aware:** If Step 1b marked a CLAUDE.md as Accurate, skip recreation. If Outdated, apply only the approved changes. If the file is Missing or no audit was run, create normally.
 
 ### Single project
 
@@ -173,6 +205,8 @@ For each detected subproject (except root-as-member — the root CLAUDE.md alrea
 
 ## Step 5: Create settings.json
 
+**Audit-aware:** If Step 1b marked settings.json as Accurate, skip recreation. If Outdated (e.g., stale allow list), apply only the approved changes. If Missing or no audit was run, create normally.
+
 Use template from `.claude/skills/claude-code-bootstrap/templates/settings.json`. Customize allow list based on detected project type:
 
 | Type | Commands to Allow |
@@ -190,6 +224,8 @@ Use template from `.claude/skills/claude-code-bootstrap/templates/settings.json`
 **If monorepo:** Union the permission sets for all tech stacks detected across subprojects into a single root `.claude/settings.json`.
 
 ## Step 6: Create Documentation Files
+
+**Audit-aware:** If Step 1b marked a doc file as Accurate, skip recreation. If Outdated, apply only the approved changes. If Missing or no audit was run, create normally. For the "Selective" path, only act on findings the user approved — leave all other files unchanged.
 
 **Always create in `.claude/docs/`:**
 - `coding-guidelines.md` - Use template from `.claude/skills/claude-code-bootstrap/templates/docs/coding-guidelines.md` (replace [PROJECT NAME]). Shared across the entire repo.
