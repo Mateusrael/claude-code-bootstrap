@@ -55,7 +55,7 @@ Read `.claude/skills/claude-code-bootstrap/references/claude-md-best-practices.m
 | Maven multi-module | `pom.xml` with `<modules>` section |
 | Bazel | `WORKSPACE` or `WORKSPACE.bazel` file |
 
-**Step B — Scan for independent manifests** (confirms monorepo if 2+ dirs found):
+**Step B — Scan for independent manifests** (confirms monorepo if 2+ projects found):
 
 Scan top-level directories for manifest files (from the manifest table above). Skip:
 - **Dot-directories**: `.git`, `.github`, `.vscode`, etc.
@@ -64,14 +64,22 @@ Scan top-level directories for manifest files (from the manifest table above). S
 - **Framework/cache**: `.next`, `.nuxt`, `__pycache__`, `.cache`, `.tox`
 - **Non-project**: `examples`, `demos`, `test-fixtures`, `e2e`, `__tests__`, `.storybook`
 
+**Root-as-project check** (only when Step B found exactly 1 qualifying subdirectory):
+The root itself may be an independent project. Count it as an additional project if the root has a manifest file AND at least one of:
+- A **framework-specific config** at root (`angular.json`, `next.config.*`, `nuxt.config.*`, `vue.config.*`, `svelte.config.*`, `astro.config.*`, `webpack.config.*`, `vite.config.*`, `tsconfig.app.json`)
+- A **root source directory** (`src/`, `app/`, or `lib/`) containing source files, where the subdirectory project also has its own source files — indicating two separate codebases
+- A **different test framework** at root vs the subdirectory (e.g., root has `karma.conf.js` while subdirectory has `jest.config.js`)
+
 **Step C — Check supporting signals** (cannot confirm alone):
 
-- `README.md` describes multi-component architecture ("frontend and backend", "client and server", "microservices", etc.)
+- `README.md` describes multi-component architecture (mentions separate apps, services, or components: "frontend and backend", "client and server", "API server", "microservices", etc.)
 - `docker-compose.yml` / `compose.yml` defines multiple services with `build:` contexts pointing to different subdirectories
+- Root manifest scripts use `concurrently`, `npm-run-all`, or `run-p`/`run-s` to launch multiple processes
+- Proxy configuration exists (`proxy.conf.json`, `proxy.conf.js`, `setupProxy.js`) indicating a frontend proxying to a local backend
 
 **Decision:**
 - Workspace config found (Step A) → confirmed monorepo, enumerate from config
-- 2+ dirs with manifests (Step B) → confirmed monorepo, enumerate from dirs
+- 2+ projects with manifests (Step B) → confirmed monorepo, enumerate from projects
 - Supporting signals (Step C) + 1 dir with manifest → likely monorepo, ask user to confirm
 - Supporting signals only → insufficient evidence, ask user to identify subproject dirs
 - No signals → single project
@@ -80,8 +88,8 @@ Scan top-level directories for manifest files (from the manifest table above). S
 
 **Enumerate subprojects:**
 - Step A detected: use workspace member list + any additional top-level dirs with manifests not in the config.
-- Step B only: use all qualifying top-level dirs.
-- Root-as-workspace-member (e.g., `"."` in workspaces): include in subproject table but do NOT create a separate CLAUDE.md — root CLAUDE.md covers it.
+- Step B only: use all qualifying top-level dirs. If the root-as-project check qualified the root, include it too.
+- Root-as-project or root-as-workspace-member (e.g., `"."` in workspaces): include in subproject table but do NOT create a separate CLAUDE.md — root CLAUDE.md covers it. Its docs go in `.claude/docs/`.
 - For each subproject, detect its tech stack using the manifest table.
 
 ### Step 1 Checkpoint
@@ -192,11 +200,13 @@ Use template from `.claude/skills/claude-code-bootstrap/templates/monorepo-claud
 - If a workspace tool was detected (Step A), include "managed by [tool]" in the description line
 - If no workspace tool was detected (Step B only), use "Monorepo with [N] packages" or "Multi-project repository with [N] components" without referencing a workspace tool
 
+If root-as-project: also list root-scoped docs from `.claude/docs/` (testing.md, styling.md, architecture.md as applicable) in the Documentation section, alongside the shared `coding-guidelines.md`.
+
 If more than 6 subprojects, group by category (apps, libs, services) in the root CLAUDE.md and move the full subproject table to `.claude/docs/architecture.md`. Keep descriptions concise (abbreviate stacks, e.g., "TS/React" not "TypeScript, React, Vite, Tailwind") to stay under 60 lines.
 
 ## Step 4b: Create Subproject CLAUDE.md Files (monorepo only)
 
-For each detected subproject (except root-as-member — the root CLAUDE.md already covers it), create `<subproject>/CLAUDE.md` using template from `.claude/skills/claude-code-bootstrap/templates/subproject-claude.md`:
+For each detected subproject (except root-as-project/root-as-member — the root CLAUDE.md already covers it), create `<subproject>/CLAUDE.md` using template from `.claude/skills/claude-code-bootstrap/templates/subproject-claude.md`:
 - Scope WHAT/WHY/HOW to that subproject's tech stack and purpose
 - Include only commands specific to this subproject (run from its directory)
 - Reference its local `docs/` folder for detailed documentation
@@ -240,7 +250,7 @@ Use template from `.claude/skills/claude-code-bootstrap/templates/settings.json`
 
 **Placement rules:**
 - **Single project:** All files go in `.claude/docs/`.
-- **Monorepo:** `testing.md`, `styling.md`, and `architecture.md` go in each subproject's `docs/` folder, scoped to that subproject's stack. Apply the detection rules above **per subproject** (e.g., skip `styling.md` for a subproject with no UI deps). Each subproject can also get its own `coding-guidelines.md` only if its conventions differ significantly from root.
+- **Monorepo:** `testing.md`, `styling.md`, and `architecture.md` go in each subproject's `docs/` folder, scoped to that subproject's stack. Apply the detection rules above **per subproject** (e.g., skip `styling.md` for a subproject with no UI deps). For root-as-project, its scoped docs go in `.claude/docs/` alongside the shared `coding-guidelines.md`. Each subproject can also get its own `coding-guidelines.md` only if its conventions differ significantly from root.
 
 ## Step 7: Verify and Report
 

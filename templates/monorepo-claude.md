@@ -19,8 +19,9 @@
 Each subproject has its own CLAUDE.md with subproject-specific guidance:
 - `[path]/CLAUDE.md` - [one-line description]
 
-## Shared Guidelines
+## Documentation
 
-Read before making changes to any package:
+Read the relevant doc before making changes:
 - `.claude/docs/coding-guidelines.md` - For new features, refactoring, code structure
-<!-- If >6 subprojects, add: - `.claude/docs/architecture.md` - For repo-wide package map and dependencies -->
+<!-- Only list docs that were actually created -->
+<!-- If >6 subprojects: - `.claude/docs/architecture.md` - Full architecture map -->

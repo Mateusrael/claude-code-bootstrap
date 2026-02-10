@@ -24,6 +24,4 @@ Read the relevant doc before making changes:
 - `docs/styling.md` - For UI components, CSS, visual changes
 - `docs/architecture.md` - For understanding subproject structure, data flow
 
-## Shared Guidelines
-
 Root `.claude/docs/coding-guidelines.md` applies to all packages in this monorepo.
