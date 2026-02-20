@@ -214,7 +214,7 @@ Use template from `.claude/skills/claude-code-bootstrap/templates/settings.json`
 | Python (uv) | `uv run`, `uv sync`, `uv pip`, `ruff`, `mypy` |
 | Python (poetry) | `poetry run`, `poetry install`, `ruff`, `mypy` |
 | Python (pip) | `pytest`, `pip install`, `pip list`, `ruff`, `mypy`, `python -m pytest`, `python -m mypy` |
-| C#/.NET | `dotnet build`, `dotnet test`, `dotnet run`, `dotnet restore` |
+| C#/.NET | `dotnet build`, `dotnet test`, `dotnet run`, `dotnet restore`, `dotnet tool restore` |
 | Java/Maven | `mvn compile`, `mvn test`, `mvn package` |
 | Java/Gradle | `gradle build`, `gradle test`, `gradlew` |
 | Go | `go build`, `go test`, `go run`, `go vet`, `golangci-lint` |
@@ -235,12 +235,11 @@ Add auto-format hooks so files stay consistently formatted after every Edit/Writ
 |-------|----------|-----------|----------|--------------|
 | Python | `format-python.py` | black + isort | Python 3 | In project deps (requirements*.txt, pyproject.toml, Pipfile), or user approves |
 | Node.js | `format-node.js` | prettier | Node.js | In package.json devDependencies, or user approves |
-| Rust | `format-rust.py` | rustfmt | Python 3 | Always (rustfmt is built-in) — detect Python command first (see below) |
-| Go | `format-go.py` | gofmt | Python 3 | Always (gofmt is built-in) — detect Python command first (see below) |
+| Rust | `format-rust.sh` | rustfmt | Bash | Always (rustfmt is built-in) |
+| Go | `format-go.sh` | gofmt | Bash | Always (gofmt is built-in) |
+| C#/.NET | `format-csharp.sh` | csharpier | Bash | In `.config/dotnet-tools.json`, or user approves (suggest `dotnet tool install csharpier`) |
 
-If Python 3 is not available and the project is Rust/Go-only, skip those hooks and inform the user ("Formatter hooks for Rust/Go require Python 3 — skipping").
-
-**Detect Python command** (when any Python-based hook will be installed): Run `python3 --version`. If it fails, run `python --version` and verify the output shows Python 3.x. Use whichever succeeds as `<python-cmd>` in hook commands below. If neither works, Python 3 is not available.
+**Detect Python command** (only when the Python formatter hook will be installed): Run `python3 --version`. If it fails, run `python --version` and verify the output shows Python 3.x. Use whichever succeeds as `<python-cmd>` in hook commands below. If neither works, skip the Python hook and inform the user.
 
 1. Copy applicable template(s) from `.claude/skills/claude-code-bootstrap/templates/hooks/` to `.claude/hooks/`.
 2. External formatters not in deps → ask user "Add [formatter] as dev dependency and install format hook?" If declined, skip.
@@ -253,14 +252,15 @@ If Python 3 is not available and the project is Rust/Go-only, skip those hooks a
       "matcher": "Edit|Write",
       "hooks": [
         { "type": "command", "command": "<python-cmd> \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/format-python.py", "timeout": 30 },
-        { "type": "command", "command": "node \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/format-node.js", "timeout": 30 }
+        { "type": "command", "command": "node \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/format-node.js", "timeout": 30 },
+        { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/format-csharp.sh", "timeout": 30 }
       ]
     }
   ]
 }
 ```
 
-Include only the hooks that were actually installed. For Python/Rust/Go stacks use `<python-cmd> "..."` (the detected command — `python3` or `python`), for Node.js use `node "..."`. Monorepos: install all applicable hooks (each filters by file extension internally).
+Include only the hooks that were actually installed. For Python use `<python-cmd> "..."` (the detected command — `python3` or `python`), for Node.js use `node "..."`, for Bash-based hooks (Rust, Go, C#) use `bash "..."`. Monorepos: install all applicable hooks (each filters by file extension internally).
 
 ## Step 6: Create Documentation Files
 

@@ -28,7 +28,7 @@ Claude Code's built-in `/init` command creates basic documentation. This skill c
 - **60-line CLAUDE.md** - Keeps the main file within LLM's peak attention window
 - **Progressive disclosure** - Details in separate docs, not one massive file
 - **Pre-configured permissions** - Safe defaults for build/test/lint commands
-- **Auto-format hooks** - Installs PostToolUse hooks for black, prettier, rustfmt, gofmt (per detected stack)
+- **Auto-format hooks** - Installs PostToolUse hooks for black, prettier, rustfmt, gofmt, csharpier (per detected stack)
 - **Monorepo support** - Auto-detects monorepos via workspace tools and manifest scanning, with supporting signals from README and Docker Compose — generates scoped docs per subproject
 
 ## What Gets Generated
@@ -41,7 +41,7 @@ Claude Code's built-in `/init` command creates basic documentation. This skill c
 | `.claude/docs/testing.md`           | Testing conventions (if test framework detected)                 | Generated    |
 | `.claude/docs/styling.md`           | UI/CSS guidelines (if frontend project)                          | Generated    |
 | `.claude/docs/architecture.md`      | Project structure documentation                                  | Generated    |
-| `.claude/hooks/format-*.{py,js}`    | Auto-format hooks for detected stacks (see below)                | Template     |
+| `.claude/hooks/format-*.{py,js,sh}` | Auto-format hooks for detected stacks (see below)                | Template     |
 
 *Template* = copied from `templates/` and customized. *Generated* = created by Claude following `SKILL.md` instructions.
 
@@ -53,8 +53,9 @@ PostToolUse hooks that auto-format files after every Edit/Write, installed per d
 |------|-----------|----------------|
 | `format-python.py` | black + isort | Python project (in deps, or user approves) |
 | `format-node.js` | prettier | Node.js project (in devDependencies, or user approves) |
-| `format-rust.py` | rustfmt | Rust project (built-in, requires Python 3) |
-| `format-go.py` | gofmt | Go project (built-in, requires Python 3) |
+| `format-rust.sh` | rustfmt | Rust project (built-in) |
+| `format-go.sh` | gofmt | Go project (built-in) |
+| `format-csharp.sh` | csharpier | C#/.NET project (in dotnet-tools.json, or user approves) |
 
 ### Monorepo Projects
 
@@ -85,7 +86,7 @@ See `templates/settings.json` to customize defaults.
 | `templates/single-project-claude.md` | CLAUDE.md template for single projects |
 | `templates/monorepo-claude.md` | Root CLAUDE.md template for monorepo projects |
 | `templates/subproject-claude.md` | Per-subproject CLAUDE.md template |
-| `templates/hooks/` | Formatter hook templates (Python, Node.js, Rust, Go) |
+| `templates/hooks/` | Formatter hook templates (Python, Node.js, Rust, Go, C#) |
 | `references/` | Best practices guide (based on HumanLayer research) |
 
 To understand or modify how the skill works, start with `SKILL.md`.
