@@ -7,4 +7,6 @@ file_path="${BASH_REMATCH[1]}"
 
 [[ "$file_path" == *.go ]] || exit 0
 
-gofmt -w "$file_path" >/dev/null 2>&1 || true
+if ! output=$(gofmt -w "$file_path" 2>&1); then
+  echo "[format-go] gofmt failed: $(echo "$output" | head -1)" >&2
+fi

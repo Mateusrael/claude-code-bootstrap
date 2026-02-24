@@ -11,4 +11,6 @@ file_path="${BASH_REMATCH[1]}"
 abs_dir="$(cd "$(dirname "$file_path")" 2>/dev/null && pwd)"
 [[ -n "$abs_dir" ]] || exit 0
 
-dotnet csharpier "$abs_dir/$(basename "$file_path")" >/dev/null 2>&1 || true
+if ! output=$(dotnet csharpier "$abs_dir/$(basename "$file_path")" 2>&1); then
+  echo "[format-csharp] csharpier failed: $(echo "$output" | head -1)" >&2
+fi
