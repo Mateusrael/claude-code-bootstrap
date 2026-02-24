@@ -136,7 +136,7 @@ Print this as a **Detection Summary** to the user before proceeding. This gives 
 
 If existing docs were found, analyze them to identify what needs updating:
 
-1. **Read all existing doc files** from the inventory (CLAUDE.md, settings.json, all `.claude/docs/*.md`, `.claude/agents/code-simplifier.md`, and for monorepos each subproject's CLAUDE.md and `docs/*.md`).
+1. **Read all existing doc files** from the inventory (CLAUDE.md, settings.json, all `.claude/docs/*.md`, and for monorepos each subproject's CLAUDE.md and `docs/*.md`).
 
 2. **Compare documented state vs detected state:**
 
@@ -243,7 +243,7 @@ Add auto-format hooks so files stay consistently formatted after every Edit/Writ
 
 Copy `.claude/skills/claude-code-bootstrap/templates/agents/code-simplifier.md` to `.claude/agents/code-simplifier.md`.
 
-**Skip** if `.claude/agents/code-simplifier.md` already exists and Step 1b marked it as Accurate.
+Always overwrite — this is a verbatim template, not project-customized content.
 
 ## Step 6: Create Documentation Files
 
