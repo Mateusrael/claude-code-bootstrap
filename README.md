@@ -1,6 +1,10 @@
 # claude-code-bootstrap
 
-Replace Claude Code's basic `/init` with research-backed CLAUDE.md files optimized for LLM comprehension and attention.
+What makes a good developer productive in a codebase also makes Claude Code productive: **clean code, good test coverage, and clear documentation.**
+
+Research backs this up: AI tools introduce [30%+ more defects](https://arxiv.org/abs/2601.02200) on poorly maintained code, LLM performance [degrades up to 85%](https://arxiv.org/abs/2510.05381) as context length grows, and Anthropic's [#1 best practice](https://code.claude.com/docs/en/best-practices) for Claude Code is giving it a way to verify its own work.
+
+`/bootstrap` replaces Claude Code's basic `/init` with a research-backed setup that keeps your project in the LLM's peak performance zone.
 
 ## Quick Start
 
@@ -16,29 +20,44 @@ git clone https://github.com/oprogramadorreal/claude-code-bootstrap %USERPROFILE
 
 **Run:** Start a new Claude Code session and type `/bootstrap` in any project directory.
 
+## Why This Skill?
+
+When you join a new project, you need good test coverage (to change code safely), clean code (to understand what's going on), and documentation (for non-obvious decisions). Claude Code needs the same things — for similar reasons:
+
+- **DRY code** avoids wasting context tokens with duplicate information
+- **Meaningful names** give the LLM better semantic signals
+- **Unit tests** enable self-correction: make change → run tests → see failure → fix
+- **Focused documentation** keeps the context window efficient and contradiction-free
+
+The LLM already knows best practices from training — but the trigger to apply them comes from the project context. `/bootstrap` provides that trigger.
+
 ## What It Does
 
-AI-assisted coding amplifies output — but also amplifies drift from intended architecture. A well-structured CLAUDE.md acts as an anchor that resists this degradation.
+`/bootstrap` analyzes your project and sets up five pillars designed to maximize Claude Code's performance:
 
-`/bootstrap` analyzes your project and generates documentation following [research-backed practices](https://www.humanlayer.dev/blog/writing-a-good-claude-md):
+### 1. Context Architecture
 
-- **WHAT/WHY/HOW structure** — Organizes information for optimal LLM comprehension
-- **60-line CLAUDE.md** — Keeps the main file within LLM's peak attention window
-- **Progressive disclosure** — Details in separate docs, not one massive file
+Creates CLAUDE.md files following [research-backed practices](https://www.humanlayer.dev/blog/writing-a-good-claude-md): a compact ~60-line root file within the LLM's peak attention window, with details in separate docs loaded only when needed. Just like you don't keep all backend details in your head while fixing a frontend bug, Claude shouldn't load everything into context at once.
+
+### 2. Code Consistency
+
+Installs PostToolUse hooks that auto-format code every time Claude modifies a file. This prevents formatting drift — different styles introduce unnecessary token variation that adds no information.
+
+### 3. Code Quality
+
+Deploys a [code-simplifier](templates/agents/code-simplifier.md) agent that enforces your project's [coding guidelines](templates/docs/coding-guidelines.md) — clean code, small functions, clear naming, proper abstractions. This isn't about aesthetics: well-maintained code has [30%+ fewer AI-introduced defects](https://arxiv.org/abs/2601.02200).
+
+### 4. Test Coverage
+
+Tests are the feedback loop that makes AI agents self-correcting: make change → run tests → see failure → fix. Without tests, Claude Code is flying blind. When test infrastructure is detected, `/bootstrap` installs a [test-guardian](templates/agents/test-guardian.md) agent that monitors coverage gaps — flagging untested code, verifying that existing tests still pass, and checking that test commands are runnable. It doesn't write tests or install frameworks; it ensures the project maintains its testing standards as it evolves. This directly enables Anthropic's [#1 best practice](https://code.claude.com/docs/en/best-practices): giving Claude a way to verify its work.
+
+### 5. Documentation Freshness
+
+Reviews existing documentation (README, CONTRIBUTING, etc.) for contradictions against the actual source code. Stale docs in context degrade LLM performance — if documentation says one thing and the code says another, you're actively harming output quality.
+
+**Additional features:**
 - **Audit on re-run** — Compares docs against current project state, classifies sections as Outdated / Missing / Accurate, and lets you choose what to update
-- **Auto-format hooks** — Installs PostToolUse hooks for black, prettier, rustfmt, gofmt, csharpier per detected stack
-- **Code simplifier agent** — Proactively enforces your coding guidelines on every change, keeping code clean for better LLM comprehension
 - **Monorepo support** — Auto-detects monorepos via workspace tools and manifest scanning, generates scoped docs per subproject
-- **Documentation sync** — Cross-checks existing docs (README, CONTRIBUTING, etc.) against source code and fixes contradictions
-
-**Generated files:**
-
-- `.claude/CLAUDE.md` — Project overview, commands, doc references
-- `.claude/settings.json` — Formatter hook configuration
-- `.claude/docs/` — Coding guidelines, testing, styling, architecture (per detected stack)
-- `.claude/hooks/` — Auto-format hooks for detected stacks (see below)
-- `.claude/agents/` — Code simplifier agent aligned with your coding standards
-- Monorepo: each subproject gets its own `CLAUDE.md` and `docs/` with scoped documentation
 
 ## Formatter Hooks
 
@@ -49,16 +68,20 @@ PostToolUse hooks that auto-format files after every Edit/Write, installed per d
 | `format-python.py` | black + isort | Python project detected |
 | `format-node.js` | prettier | Node.js project detected |
 | `format-rust.sh` | rustfmt | Rust project detected (built-in) |
-| `format-go.sh` | gofmt | Go project detected (built-in) |
+| `format-go.sh` | goimports / gofmt | Go project detected (built-in) |
 | `format-csharp.sh` | csharpier | C#/.NET project detected |
+| `format-java.sh` | google-java-format | Java project detected |
 
-For stacks requiring external formatters (Python, Node.js, C#), `/bootstrap` checks your dependencies and asks before installing anything.
+For stacks requiring external formatters (Python, Node.js, C#, Java), `/bootstrap` checks your dependencies and asks before installing anything.
 
-## Code Quality Agent
+## Agents
 
-LLM performance depends on what it reads: both documentation and source code. `/bootstrap` installs a [code-simplifier](templates/agents/code-simplifier.md) agent that proactively enforces your coding guidelines on every change — simplifying code for clarity, consistency, and maintainability while preserving functionality.
+| Agent | Purpose | Installed when |
+|-------|---------|----------------|
+| [code-simplifier](templates/agents/code-simplifier.md) | Enforces coding guidelines on every change | Always |
+| [test-guardian](templates/agents/test-guardian.md) | Flags untested code, verifies test suite passes | Test infrastructure detected |
 
-The agent reads your project's `.claude/docs/coding-guidelines.md` at runtime, so it always follows your established conventions rather than imposing external style rules. It activates automatically on recently modified code; for a broader review:
+Both agents read your project's `.claude/CLAUDE.md` and `.claude/docs/` at runtime, so they follow your established conventions rather than imposing external rules. The code-simplifier activates proactively after code changes; the test-guardian operates at the end of logical tasks to verify test coverage. For a project-wide code review:
 
 > Use the code-simplifier agent to analyze this project against the standards in .claude/docs/coding-guidelines.md and suggest simplifications
 
@@ -77,6 +100,22 @@ For ongoing quality between audits, the official [claude-md-management](https://
 
 Install the plugin: `claude plugin add claude-md-management`
 
+## Generated Files
+
+| File | Purpose |
+|------|---------|
+| `.claude/CLAUDE.md` | Project overview, commands, doc references |
+| `.claude/settings.json` | Formatter hook configuration |
+| `.claude/docs/coding-guidelines.md` | Code style and architecture guidelines |
+| `.claude/docs/testing.md` | Testing conventions (when test framework detected) |
+| `.claude/docs/styling.md` | UI/CSS guidelines (when frontend detected) |
+| `.claude/docs/architecture.md` | Project structure (when complex structure detected) |
+| `.claude/hooks/` | Auto-format hooks per detected stack |
+| `.claude/agents/code-simplifier.md` | Code quality agent |
+| `.claude/agents/test-guardian.md` | Test coverage agent (when test infrastructure detected) |
+
+**Monorepo:** each subproject also gets its own `CLAUDE.md` and scoped `docs/`.
+
 ## Customization
 
 To understand or modify how the skill works, start with `SKILL.md`. Key files:
@@ -85,18 +124,24 @@ To understand or modify how the skill works, start with `SKILL.md`. Key files:
 - **CLAUDE.md templates**: `templates/single-project-claude.md`, `templates/monorepo-claude.md`, `templates/subproject-claude.md`
 - **Coding guidelines**: `templates/docs/coding-guidelines.md` — Shared style rules template
 - **Hook configuration**: `templates/settings.json` — PostToolUse hook structure
-- **Formatter hooks**: `templates/hooks/` — Hook templates (Python, Node.js, Rust, Go, C#)
-- **Code simplifier agent**: `templates/agents/code-simplifier.md` — Agent template
+- **Formatter hooks**: `templates/hooks/` — Hook templates (Python, Node.js, Rust, Go, C#, Java)
+- **Agents**: `templates/agents/` — code-simplifier and test-guardian templates
 - **Best practices reference**: `references/claude-md-best-practices.md` — Research-backed guidance
+
+## Research & References
+
+The principles behind this skill are supported by research and industry practice:
+
+- **Anthropic** — [Claude Code Best Practices](https://code.claude.com/docs/en/best-practices): testing as #1 practice, compact CLAUDE.md, deterministic hooks, custom subagents
+- **Borg et al. (2026)** — [Code for Machines, Not Just Humans](https://arxiv.org/abs/2601.02200) (3rd ACM FORGE): LLM-based refactoring on 5,000 Python files; AI defect risk increases 30%+ on unhealthy code (CodeHealth < 7.0)
+- **Thoughtworks Technology Radar Vol. 32 (2025)** — [AI-friendly code design](https://www.thoughtworks.com/radar/techniques/ai-friendly-code-design) (Assess ring): "good software design for humans also benefits AI"
+- **Du et al. (2025)** — [Context Length Alone Hurts LLM Performance](https://arxiv.org/abs/2510.05381) (Findings of EMNLP): even with perfect retrieval, 13.9%–85% performance degradation as input length increases
+- **HumanLayer (2025)** — [Writing a Good CLAUDE.md](https://www.humanlayer.dev/blog/writing-a-good-claude-md): WHAT/WHY/HOW structure, progressive disclosure, <60 lines ideal
 
 ## Requirements
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) — `/bootstrap` is a [skill](https://docs.anthropic.com/en/docs/claude-code/skills) (reusable prompt that adds a slash command)
 - Git
-
-## Credits
-
-Best practices based on [Writing a Good CLAUDE.md](https://www.humanlayer.dev/blog/writing-a-good-claude-md) by HumanLayer.
 
 ## License
 

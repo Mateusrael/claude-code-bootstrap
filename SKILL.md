@@ -125,7 +125,8 @@ Before proceeding, confirm you have all of the following. If any are missing, re
 - **Monorepo status**: single project, confirmed monorepo, or ambiguous (awaiting user input)
 - If monorepo: **subproject list** with each subproject's path, purpose, and tech stack
 - If monorepo: **workspace tool** (if any)
-- **Existing files inventory** (existence check only — content is read in Step 1b): which of `.claude/CLAUDE.md`, `.claude/settings.json`, `.claude/docs/*`, `.claude/agents/code-simplifier.md`, root `CLAUDE.md`, subproject `CLAUDE.md` files already exist
+- **Existing files inventory** (existence check only — content is read in Step 1b): which of `.claude/CLAUDE.md`, `.claude/settings.json`, `.claude/docs/*`, `.claude/agents/code-simplifier.md`, `.claude/agents/test-guardian.md`, root `CLAUDE.md`, subproject `CLAUDE.md` files already exist
+- **Test infrastructure detected** (yes/no): test framework in dependencies, test command in scripts, or test directory present
 - **Doc-sourced insights** (if any documentation found): verified conventions, architecture rationale, workflow rules — all cross-checked against source code
 
 Print this as a **Detection Summary** to the user before proceeding. This gives the user a chance to correct any misdetection before files are generated. If the user provides corrections, update the detection results accordingly before proceeding.
@@ -247,6 +248,14 @@ Copy `.claude/skills/claude-code-bootstrap/templates/agents/code-simplifier.md` 
 
 Always overwrite — this is a verbatim template, not project-customized content.
 
+## Step 5c: Install Test Guardian Agent (conditional)
+
+**Only install when test infrastructure was detected in Step 1** — same condition as `testing.md` creation in Step 6: test framework in dependencies, `test`/`test:*` script in manifest, or `tests/`/`test/`/`spec/`/`__tests__/` directory exists.
+
+If detected: Copy `.claude/skills/claude-code-bootstrap/templates/agents/test-guardian.md` to `.claude/agents/test-guardian.md`. Always overwrite — this is a verbatim template, not project-customized content.
+
+If not detected: Skip installation. In Step 7 summary, include a recommendation: "No test infrastructure detected. Consider adding tests — Anthropic's #1 best practice for Claude Code is giving Claude a way to verify its work."
+
 ## Step 6: Create Documentation Files
 
 **Always create in `.claude/docs/`:**
@@ -309,6 +318,7 @@ Run through this checklist. **Fix any failures before reporting to the user.**
 - Monorepo: each subproject's `CLAUDE.md` exists, mentions subproject name, and is <= 60 lines.
 - `.claude/hooks/*`: Each hook file matches its template.
 - `.claude/agents/code-simplifier.md`: File exists and matches template.
+- `.claude/agents/test-guardian.md` (if test infrastructure was detected): File exists and matches template.
 - **Sync changes (Step 6b)**: If sync changes were applied, verify each modified file still has valid markdown and no truncated content.
 
 **Cross-reference checks:**
