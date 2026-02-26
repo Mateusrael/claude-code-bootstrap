@@ -1,5 +1,6 @@
 ---
-description: Analyze local git changes and suggest conventional commit messages without committing
+name: commit-message
+description: This skill should be used when the user asks to "suggest a commit message", "generate commit message", "what should I commit", "summarize my changes", "describe my changes", "commit message", or types "/bootstrap:commit-message". Analyzes local git changes and generates a conventional commit message without committing.
 disable-model-invocation: true
 ---
 
