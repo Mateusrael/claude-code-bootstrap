@@ -12,8 +12,7 @@
       "name": "bootstrap",
       "source": {
         "source": "github",
-        "repo": "oprogramadorreal/claude-code-bootstrap",
-        "ref": "plugin"
+        "repo": "oprogramadorreal/claude-code-bootstrap"
       },
       "description": "Project setup, permissions, and commit message skills for Claude Code"
     }

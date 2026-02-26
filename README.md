@@ -22,7 +22,7 @@ The LLM already knows best practices from training — but the trigger to apply 
 **Install:**
 
 ```shell
-/plugin marketplace add https://github.com/oprogramadorreal/claude-code-bootstrap.git#plugin
+/plugin marketplace add https://github.com/oprogramadorreal/claude-code-bootstrap.git
 /plugin install bootstrap@claude-code-bootstrap
 ```
 
