@@ -4,7 +4,10 @@ What makes a good developer productive in a codebase also makes Claude Code prod
 
 Research backs this up: AI tools introduce [30%+ more defects](https://arxiv.org/abs/2601.02200) on poorly maintained code, LLM performance [degrades up to 85%](https://arxiv.org/abs/2510.05381) as context length grows, and Anthropic's [#1 best practice](https://code.claude.com/docs/en/best-practices) for Claude Code is giving it a way to verify its own work.
 
-`/bootstrap:init` sets up your project for LLM peak performance, `/bootstrap:unit-test` builds the feedback loop that makes AI self-correcting, and `/bootstrap:simplify` reviews existing code against the guidelines they establish.
+- `/bootstrap:init` sets up your project for LLM peak performance
+- `/bootstrap:unit-test` builds the feedback loop that makes AI self-correcting
+- `/bootstrap:simplify` reviews existing code against the guidelines they establish
+- `/bootstrap:code-review` catches issues in your changes before they enter the repo
 
 ## Why This Plugin?
 
@@ -35,6 +38,7 @@ The LLM already knows best practices from training — but the trigger to apply 
 | [Init](#bootstrapinit) | `/bootstrap:init` | CLAUDE.md, docs, formatter hooks, quality agents |
 | [Unit Test](#bootstrapunit-test) | `/bootstrap:unit-test` | On-demand unit test coverage improvement |
 | [Simplify](#bootstrapsimplify) | `/bootstrap:simplify` | Project-wide code simplification against coding guidelines |
+| [Code Review](#bootstrapcode-review) | `/bootstrap:code-review` | Local-first code review with parallel agent-assisted analysis |
 | [Permissions](#bootstrappermissions) | `/bootstrap:permissions` | Allow/deny rules, path-restriction hook |
 | [Commit Message](#bootstrapcommit-message) | `/bootstrap:commit-message` | Conventional commit message suggester |
 
@@ -55,13 +59,12 @@ The plugin is a **distribution wrapper** around project-setup skills. It makes i
 3. **After major changes** — Re-run `/bootstrap:init` to audit and refresh docs
 4. **Code quality review** — Run `/bootstrap:simplify` for a full codebase analysis against your coding guidelines
 
-**During development** — use the builtin `/simplify` after each feature or bug fix to clean up recent changes before committing. `/bootstrap:simplify` (step 4) covers the full project periodically; the builtin handles the inner loop.
+**During development** — use `/bootstrap:code-review` before committing to catch bugs and guideline violations, and `/bootstrap:commit-message` for conventional commit messages.
 
-**Complementary tools** (optional — from Anthropic's [claude-md-management](https://claude.com/plugins/claude-md-management) plugin):
-- **Periodic quality checks** — Use `claude-md-improver` for scoring and targeted improvements
-- **After work sessions** — Use `/revise-claude-md` to capture discoveries from real usage
-
-Install: `claude plugin add claude-md-management`
+**Complementary tools** (optional):
+- **Inner-loop cleanup** — The builtin `/simplify` cleans up recent changes after each feature or bug fix. `/bootstrap:simplify` (step 4) covers the full project periodically; the builtin handles the per-change inner loop.
+- **PR code review** — Anthropic's official [code-review](https://github.com/anthropics/claude-code/tree/main/plugins/code-review) plugin reviews PRs against CLAUDE.md. Use it alongside `/bootstrap:code-review` for full coverage: bootstrap for pre-commit, official for post-push. Install: `claude plugin add code-review`
+- **Doc quality** — Anthropic's [claude-md-management](https://claude.com/plugins/claude-md-management) plugin provides `claude-md-improver` for scoring and targeted improvements, and `/revise-claude-md` to capture discoveries from real usage. Install: `claude plugin add claude-md-management`
 
 ## /bootstrap:init
 
@@ -102,6 +105,20 @@ Analyzes source code against your project's coding guidelines with emphasis on *
 Claude Code includes a builtin `/simplify` command. `/bootstrap:simplify` is the enhanced, project-aware complement — just as `/bootstrap:init` extends the builtin `/init`. Key differences: full project scope vs per-session, project-specific guidelines vs general best practices, plan-then-apply workflow, and cross-file pattern detection.
 
 See [skills/simplify/README.md](skills/simplify/README.md) for full documentation.
+
+## /bootstrap:code-review
+
+Local-first code review using up to 6 parallel review agents. Reviews uncommitted changes by default — or PR/branch changes on request — against your project's coding guidelines. High-signal findings only: bugs, logic errors, security issues, explicit guideline violations.
+
+Key capabilities:
+- **Local-first** — reviews git diff by default; PR mode with `gh` CLI when requested
+- **6 parallel agents** — bug detection, security/logic, guideline compliance (×2 for cross-validation), code-simplifier, and test-guardian run simultaneously
+- **Project-aware** — evaluates against coding-guidelines.md, testing.md, styling.md, and architecture.md
+- **Actionable** — findings include file:line, before/after sketches, and guideline citations; optional fix-in-place
+
+Anthropic's official [code-review](https://github.com/anthropics/claude-code/tree/main/plugins/code-review) plugin reviews PRs against CLAUDE.md. `/bootstrap:code-review` is the enhanced, local-first complement — just as `/bootstrap:simplify` extends the builtin `/simplify`. Key differences: local changes by default, project-specific guidelines (not just CLAUDE.md), and 6 parallel agents including code-simplifier and test-guardian. Use both: bootstrap for inner-loop review (before commit), official for PR review (after push).
+
+See [skills/code-review/README.md](skills/code-review/README.md) for full documentation.
 
 ## /bootstrap:permissions
 
