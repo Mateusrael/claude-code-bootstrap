@@ -88,10 +88,14 @@ Before proceeding, confirm you have all of the following. If any are missing, re
 - If monorepo: **subproject list** with each subproject's path, purpose, and tech stack
 - If monorepo: **workspace tool** (if any)
 - **Existing files inventory** (existence check only — content of docs is read in Step 1b; agents are never audited, always overwritten): which of `.claude/CLAUDE.md`, `.claude/settings.json`, `.claude/docs/*`, `.claude/agents/code-simplifier.md`, `.claude/agents/test-guardian.md`, root `CLAUDE.md`, subproject `CLAUDE.md` files already exist
-- **Test infrastructure detected** (yes/no): test framework in dependencies, test command in scripts, or test directory present
+- **Test infrastructure detected** (yes/no): test framework in dependencies, test command in scripts, or test directory present. If **no**: do not use `AskUserQuestion` about setting up tests or offer to skip — init never provisions test infrastructure. Note the absence in the summary and continue.
 - **Doc-sourced insights** (if any documentation found): verified conventions, architecture rationale, workflow rules — all cross-checked against source code
 
 Print this as a **Detection Summary** to the user before proceeding. This gives the user a chance to correct any misdetection before files are generated. If the user provides corrections, update the detection results accordingly before proceeding.
+
+If no test infrastructure was detected, include this note in the Detection Summary output:
+
+> **Tests:** No test framework, test script, or test directory detected — test-guardian agent and testing docs will not be installed during this setup. Run `/optimus:unit-test` after init to install a test framework, configure coverage tooling, deploy the test-guardian agent, and generate initial tests. Strongly recommended as the next step.
 
 ### Step 1b: Documentation Audit (only when existing docs found)
 
@@ -207,7 +211,7 @@ Always overwrite — this is a verbatim template, not project-customized content
 
 If detected: Copy `$CLAUDE_PLUGIN_ROOT/skills/init/templates/agents/test-guardian.md` to `.claude/agents/test-guardian.md`. Always overwrite — this is a verbatim template, not project-customized content.
 
-If not detected: Skip installation. In Step 7 summary, include: "⚠ No test infrastructure detected. Skipping test-guardian agent and testing docs. To set up a test framework and improve test coverage, run `/optimus:unit-test`."
+If not detected: Skip installation. In Step 7 summary, include: "⚠ No test infrastructure detected — test-guardian agent, testing.md, and CLAUDE.md test references were not installed. **Recommended next step:** run `/optimus:unit-test` to install a test framework, configure coverage tooling, deploy the test-guardian agent, and generate initial tests."
 
 ## Step 6: Create Documentation Files
 
@@ -286,4 +290,4 @@ Run through this checklist. **Fix any failures before reporting to the user.**
 
 **If any check fails:** Fix the issue, then re-verify. Do not proceed to the summary until all checks pass.
 
-**Summary:** Report to the user: files created, detected tech stack, and decisions made (monorepo detection rationale, which optional docs were created and why, which were skipped and why).
+**Summary:** Report to the user: files created, detected tech stack, and decisions made (monorepo detection rationale, which optional docs were created and why, which were skipped and why). If test infrastructure was not detected, include the Step 5c fallback message as the final item in the summary.
