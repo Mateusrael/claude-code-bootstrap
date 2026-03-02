@@ -143,9 +143,3 @@ For each finding: source file and function name, finding type (Test Gap | Struct
 Do NOT write test code. Only identify gaps.
 Maximum 5 findings. Report as a structured list.
 ```
-
-## Execution
-
-Launch all available agents simultaneously (parallel, not sequential). Wait for all launched agents to complete before proceeding to Step 4.
-
-**Agent availability summary**: Agents 1–4 always run (no project dependencies). Agents 5–6 depend on installed project agents. If neither project agent exists, note in the summary and recommend `/prime:init` for full 6-agent review.

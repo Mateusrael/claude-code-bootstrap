@@ -71,6 +71,7 @@ These insights flow into generated files in Steps 4–6b. The Detection Summary 
 - Workspace config found → confirmed monorepo
 - 2+ projects with manifests → confirmed monorepo
 - Supporting signals + 1 manifest dir → likely monorepo, ask user to confirm
+- Supporting signals only → insufficient evidence, ask user to identify subproject dirs
 - No signals → single project
 
 **If monorepo detected:** Inform user of detection signals and identified subprojects with tech stacks. Confirm before proceeding.
