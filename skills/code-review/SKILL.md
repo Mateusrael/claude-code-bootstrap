@@ -274,9 +274,9 @@ Read `.claude/CLAUDE.md` for project structure, then read the relevant testing.m
 Analyze ONLY the following changed files for test coverage gaps:
 [list of changed file paths from Step 1]
 
-Focus on: new public functions/methods/classes without tests, modified logic paths existing tests may not cover, test files that should have been updated alongside changes.
+Focus on: new public functions/methods/classes without tests, modified logic paths existing tests may not cover, test files that should have been updated alongside changes, code with testable logic that cannot be unit-tested as written (hardcoded dependencies, tightly coupled modules, inline DB/HTTP calls without dependency injection, deeply nested side effects, global state mutations).
 
-For each finding: source file and function name, what should be tested, recommended test file path.
+For each finding: source file and function name, finding type (Test Gap | Structural Barrier), what should be tested or what barrier prevents testing, recommended test file path (if applicable).
 Do NOT write test code. Only identify gaps.
 Maximum 5 findings. Report as a structured list.
 ```

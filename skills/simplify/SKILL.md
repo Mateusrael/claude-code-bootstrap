@@ -102,6 +102,7 @@ These findings span multiple files — the unique value of project-wide review t
 - **Pattern inconsistency** — Code in one area that deviates from patterns established elsewhere in the same codebase (e.g., error handling done three different ways, inconsistent service layer patterns)
 - **Architectural drift** — Code that has evolved away from the boundaries defined in `architecture.md` (e.g., direct DB access in a controller when the project uses a repository pattern)
 - **Missing shared abstraction** — Multiple files working around the absence of a common utility or type that would clarify intent across the codebase
+- **Testability barriers** — Code with testable logic that cannot be unit-tested due to hardcoded dependencies or tight coupling, when the coding guidelines justify extraction
 
 ### Per-file analysis
 

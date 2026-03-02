@@ -27,7 +27,7 @@ Keep functions small with a single responsibility. Minimize parameters. Group re
 Prefer framework and standard-library solutions over custom code or new dependencies.
 
 ### Pragmatic Abstractions
-Apply SOLID principles and extract abstractions only when they improve clarity. Don't add indirection for its own sake. Ensure high cohesion, low coupling, and minimal side effects.
+Apply SOLID principles and extract abstractions only when they improve clarity or are necessary to enable testing. Don't add indirection for its own sake. Ensure high cohesion, low coupling, and minimal side effects.
 
 ## Documentation
 
