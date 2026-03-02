@@ -116,10 +116,12 @@ If existing docs were found, analyze them to identify what needs updating:
    - **Missing** — project aspects that should have docs but don't
    - **Accurate** — items that are still correct (brief summary, no action needed)
 
-4. **Ask the user** how to proceed:
-   - **Update all** — apply all recommended changes
-   - **Selective** — present findings as a numbered list; user picks which numbers to apply. Unapproved findings are left as-is (existing content preserved).
-   - **Fresh start** — ignore existing docs and regenerate from scratch (proceeds to Step 2 as if no docs existed)
+4. Use `AskUserQuestion` — header "Audit", question "How would you like to handle the documentation audit findings?":
+   - **Update all** — "Apply all recommended changes"
+   - **Selective** — "Pick which findings to apply by number"
+   - **Fresh start** — "Ignore existing docs and regenerate from scratch"
+
+   If the user selects **Selective**, ask which finding numbers to apply. Unapproved findings are left as-is (existing content preserved).
 
 Remember the user's choice and approved findings. Steps 2–6 will reference them to make targeted updates rather than full overwrites. (Step 6b runs independently — see Step 6b.)
 
@@ -251,7 +253,12 @@ Cross-check existing project documentation against the source code (manifests, l
 
 The goal is surgical correction of factual errors, not editorial improvement. Only change content where source code directly contradicts a specific claim. Leave prose, tone, structure, and imprecise-but-not-wrong descriptions (e.g., "JavaScript" when project uses TypeScript with JS interop) untouched. Do not add sections, create files, or touch files outside the project root.
 
-**If contradictions found:** Present a Sync Report (file, current content, proposed fix, source code evidence). Ask user: **Apply all**, **Selective** (numbered), or **Skip sync**. Apply only approved changes.
+**If contradictions found:** Present a Sync Report (file, current content, proposed fix, source code evidence). Use `AskUserQuestion` — header "Sync", question "How would you like to handle the documentation sync findings?":
+- **Apply all** — "Apply all proposed corrections"
+- **Selective** — "Pick which corrections to apply by number"
+- **Skip sync** — "No changes to project documentation"
+
+If the user selects **Selective**, ask which correction numbers to apply. Apply only approved changes.
 
 **If no contradictions found:** report this and proceed to Step 7.
 

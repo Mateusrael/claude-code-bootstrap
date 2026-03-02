@@ -136,7 +136,12 @@ Create a prioritized list, **capped at 10 items per run**:
 - Declarative configuration
 - Thin wrappers with no logic
 
-Present the plan and ask the user to approve which items to proceed with.
+Present the plan, then use `AskUserQuestion` — header "Plan", question "How would you like to proceed with the test generation plan?":
+- **Approve all** — "Generate tests for all planned items"
+- **Selective** — "Choose specific items by number"
+- **Skip** — "No tests — keep the plan as reference"
+
+If the user selects **Selective**, ask which item numbers to proceed with (e.g., "1, 3, 5").
 
 ## Step 7: Test Writing
 

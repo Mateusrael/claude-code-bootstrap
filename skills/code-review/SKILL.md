@@ -231,15 +231,15 @@ For PR mode, include full-SHA code links: `https://github.com/owner/repo/blob/[f
 
 ## Step 6: Offer Actions
 
-Present options based on review mode:
+Use `AskUserQuestion` to present options based on review mode:
 
-**Local changes / branch diff**:
-- **Fix issues** — apply suggested fixes directly (Edit tool). After applying, run the project's test command (from `.claude/CLAUDE.md`) if available to verify nothing broke
-- **Skip** — keep the report as reference
+**Local changes / branch diff** — header "Action", question "How would you like to proceed with the review findings?":
+- **Fix issues** — "Apply suggested fixes directly, then run tests to verify"
+- **Skip** — "Keep the report as reference only"
 
-**PR review**:
-- **Post comment** — post the review summary as a PR comment (`gh pr comment <N> --body "..."`)
-- **Skip** — keep the report as reference only
+**PR review** — header "Action", question "How would you like to proceed with the review findings?":
+- **Post comment** — "Post the review summary as a PR comment"
+- **Skip** — "Keep the report as reference only"
 
 ## Important
 
