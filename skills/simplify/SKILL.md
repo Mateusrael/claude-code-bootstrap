@@ -1,5 +1,5 @@
 ---
-description: On-demand code review — run after /prime:init, when code quality drifts, or for periodic cleanup. Analyzes the codebase against project coding guidelines, surfaces issues that span multiple files (duplication across modules, pattern inconsistency, architectural drift), and presents a simplification plan for approval before changes are applied.
+description: This skill analyzes the codebase against project coding guidelines as on-demand code review — run after /prime:init, when code quality drifts, or for periodic cleanup. Surfaces issues that span multiple files (duplication across modules, pattern inconsistency, architectural drift) and presents a simplification plan for approval before changes are applied.
 disable-model-invocation: true
 ---
 

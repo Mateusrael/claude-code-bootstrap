@@ -1,5 +1,5 @@
 ---
-description: Prime project setup for Claude Code — generates CLAUDE.md with progressive disclosure docs, auto-format hooks, and code-quality agents. Replaces /init. Supports monorepos.
+description: This skill primes a project for Claude Code — generates CLAUDE.md with progressive disclosure docs, auto-format hooks, and code-quality agents. Replaces /init. Supports monorepos.
 disable-model-invocation: true
 ---
 

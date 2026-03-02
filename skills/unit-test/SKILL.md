@@ -1,5 +1,5 @@
 ---
-description: On-demand unit test coverage improvement — discovers testing gaps, provisions test infrastructure, and generates tests that follow project conventions. Conservative: only adds new test files, never refactors existing source code.
+description: This skill improves unit test coverage on demand — discovers testing gaps, provisions test infrastructure, and generates tests that follow project conventions. Conservative: only adds new test files, never refactors existing source code.
 disable-model-invocation: true
 ---
 

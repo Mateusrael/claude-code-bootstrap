@@ -1,5 +1,5 @@
 ---
-description: Local-first code review — analyzes uncommitted changes (or PRs) against project coding guidelines using up to 6 parallel review agents (bug detection, security/logic, guideline compliance ×2, code simplification, test coverage). HIGH SIGNAL only: real bugs, logic errors, security concerns, and guideline violations.
+description: This skill performs local-first code review — analyzes uncommitted changes (or PRs) against project coding guidelines using up to 6 parallel review agents (bug detection, security/logic, guideline compliance ×2, code simplification, test coverage). HIGH SIGNAL only: real bugs, logic errors, security concerns, and guideline violations.
 disable-model-invocation: true
 ---
 
