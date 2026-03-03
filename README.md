@@ -103,6 +103,10 @@ Analyzes local git changes and suggests [conventional commit](https://www.conven
 
 See [skills/commit-message/README.md](skills/commit-message/README.md) for full documentation.
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for project structure, skill anatomy, feature branch testing, and local development setup.
+
 ## Research & References
 
 The principles behind this plugin are supported by research and industry practice:
