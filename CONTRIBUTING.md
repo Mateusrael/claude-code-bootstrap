@@ -4,6 +4,11 @@
 
 ```
 optimus-claude/
+├── .claude/                    # Claude Code settings and hooks (for contributors)
+│   ├── CLAUDE.md
+│   ├── settings.json
+│   └── hooks/
+│       └── restrict-paths.sh
 ├── .claude-plugin/
 │   ├── plugin.json           # Plugin metadata (name, version, author)
 │   └── marketplace.json      # Marketplace catalog (how Claude Code discovers the plugin)
@@ -48,6 +53,8 @@ Step-by-step instructions...
 ```
 
 All current skills use `disable-model-invocation: true` — they operate through structured, human-reviewed templates rather than dynamic LLM generation.
+
+**Note:** The `name` field is intentionally omitted from frontmatter. When present, it strips the plugin namespace prefix — `/optimus:init` would appear as just `/init`, shadowing the builtin command. See [anthropics/claude-code#22063](https://github.com/anthropics/claude-code/issues/22063).
 
 ## Adding or modifying a skill
 
