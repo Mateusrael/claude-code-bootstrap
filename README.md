@@ -103,70 +103,9 @@ Analyzes local git changes and suggests [conventional commit](https://www.conven
 
 See [skills/commit-message/README.md](skills/commit-message/README.md) for full documentation.
 
-## Development
+## Contributing
 
-### Testing a feature branch
-
-This plugin's marketplace catalog and plugin code live in the same repository. Claude Code fetches them in two separate steps, which means testing from a feature branch requires changes at both levels:
-
-1. **Marketplace level** — the `#branch` suffix on the git URL tells Claude Code which branch to read `marketplace.json` from
-2. **Plugin source level** — the `ref` field inside `marketplace.json` tells Claude Code which branch to fetch the plugin code from
-
-Without both, `/plugin install` would still pull plugin code from the default branch even though the marketplace was loaded from a feature branch.
-
-#### Setup (on the feature branch)
-
-Add a `ref` to `.claude-plugin/marketplace.json` pointing to your branch:
-
-```json
-"source": {
-  "source": "github",
-  "repo": "oprogramadorreal/optimus-claude",
-  "ref": "your-branch-name"
-}
-```
-
-Commit the change to your feature branch. (This change must NOT be merged to master — remove it before merging.)
-
-#### Install
-
-Remove the existing marketplace first, then re-add with the branch suffix:
-
-```shell
-/plugin marketplace remove optimus-claude
-/plugin marketplace add https://github.com/oprogramadorreal/optimus-claude.git#your-branch-name
-/plugin install optimus@optimus-claude
-```
-
-> **Note:** The `owner/repo#branch` shorthand is [not yet supported](https://github.com/anthropics/claude-code/issues/23551). Use the full `.git` URL with `#branch`.
-
-#### Return to production
-
-To switch back to the stable release from master:
-
-```shell
-/plugin marketplace remove optimus-claude
-/plugin marketplace add https://github.com/oprogramadorreal/optimus-claude.git
-/plugin install optimus@optimus-claude
-```
-
-#### Before merging
-
-Remove the `ref` field from `marketplace.json` so that production installs continue to use the default branch.
-
-#### Local development (faster iteration)
-
-For rapid iteration without pushing to GitHub, add the repo as a local marketplace:
-
-```shell
-git clone https://github.com/oprogramadorreal/optimus-claude.git
-cd optimus-claude && git checkout your-branch-name
-# In Claude Code:
-/plugin marketplace add ./path/to/optimus-claude
-/plugin install optimus@optimus-claude
-```
-
-No `ref` field is needed for local paths — Claude Code reads directly from the working tree.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for project structure, skill anatomy, feature branch testing, and local development setup.
 
 ## Research & References
 
