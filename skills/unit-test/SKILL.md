@@ -92,6 +92,12 @@ If `.claude/CLAUDE.md` doesn't reference testing, add test commands and a testin
 
 For monorepos, update subproject-level `CLAUDE.md` files too. Each subproject should reference its own `docs/testing.md` and test commands.
 
+### 4e: README testing section
+
+If `README.md` exists at the project root and doesn't already have a testing section (scan for headings containing "test", case-insensitive), append a concise section with: test command, coverage command (if configured), and test project/directory location. Match the README's existing heading level, language, and formatting style. Use `.claude/docs/testing.md` as the source of truth for commands and paths — do not duplicate its full content. Keep the section to 5-10 lines.
+
+For monorepos, update each subproject's `README.md` too if it exists and lacks a testing section.
+
 ## Step 5: Coverage Analysis and Achievable Threshold Estimation
 
 Before writing any tests:
@@ -181,7 +187,7 @@ Report to the user:
 ## Unit Test Summary
 
 ### Infrastructure Provisioned
-- [List of: test-guardian agent, testing.md, CLAUDE.md updates — or "None needed"]
+- [List of: test-guardian agent, testing.md, CLAUDE.md updates, README testing section — or "None needed"]
 
 ### Coverage
 - Coverage tooling: [tool name / not configured]

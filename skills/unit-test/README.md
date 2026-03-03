@@ -12,7 +12,7 @@ Well-maintained code has [30%+ fewer AI-introduced defects](https://arxiv.org/ab
 - **Project-wide discovery** — scans for test files, frameworks, coverage tooling, and optimus infrastructure status
 - **Framework recommendation** — analyzes tech stack and recommends the most popular test framework with coverage tooling
 - **Coverage tooling setup** — detects when a framework exists but coverage measurement is missing
-- **Infrastructure provisioning** — installs test-guardian agent, creates testing.md, updates CLAUDE.md if init skipped them
+- **Infrastructure provisioning** — installs test-guardian agent, creates testing.md, updates CLAUDE.md and README.md if init skipped them
 - **Achievable threshold estimation** — analyzes testable vs untestable code to set realistic coverage targets without requiring refactoring
 - **Prioritized test plan** — up to 10 items per run, highest-value targets first, user-approved before execution
 - **Conservative test writing** — adds new test files only; fixes failing tests, not source code
@@ -53,6 +53,7 @@ The skill produces a structured summary after completing:
 - Installed test-guardian agent (.claude/agents/test-guardian.md)
 - Created testing.md (.claude/docs/testing.md)
 - Added test commands to CLAUDE.md
+- Added testing section to README.md
 
 ### Coverage
 - Coverage tooling: vitest --coverage
@@ -82,7 +83,7 @@ The skill produces a structured summary after completing:
 1. Verifies project context exists and identifies available guideline documents
 2. Discovers existing test infrastructure, framework, coverage tooling, and gaps
 3. Recommends and installs test framework + coverage tooling if missing (with approval)
-4. Provisions optimus infrastructure (test-guardian, testing.md, CLAUDE.md updates)
+4. Provisions optimus infrastructure (test-guardian, testing.md, CLAUDE.md updates, README testing section)
 5. Measures baseline coverage and estimates achievable target without refactoring
 6. Presents prioritized test generation plan (capped at 10 items)
 7. Writes tests following project conventions; runs each immediately
