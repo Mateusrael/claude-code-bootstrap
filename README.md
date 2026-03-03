@@ -4,10 +4,10 @@ What makes a good developer productive in a codebase also makes Claude Code prod
 
 Research backs this up: AI tools introduce [30%+ more defects](https://arxiv.org/abs/2601.02200) on poorly maintained code, LLM performance [degrades up to 85%](https://arxiv.org/abs/2510.05381) as context length grows, and Anthropic's [#1 best practice](https://code.claude.com/docs/en/best-practices) for Claude Code is giving it a way to verify its own work (e.g., with unit tests).
 
-- `/optimus:init` sets up your project for LLM peak performance
-- `/optimus:unit-test` builds the feedback loop that makes AI self-correcting
-- `/optimus:simplify` reviews existing code against the guidelines they establish
-- `/optimus:code-review` catches issues in your changes before they enter the repo
+- `/optimus:init` generates CLAUDE.md, coding guidelines, formatter hooks, and quality agents
+- `/optimus:unit-test` fills test coverage gaps with generated tests that enable AI self-correction
+- `/optimus:simplify` finds and applies code simplifications across your project
+- `/optimus:code-review` catches bugs and violations in your changes before they enter the repo
 
 ## Why This Plugin?
 
